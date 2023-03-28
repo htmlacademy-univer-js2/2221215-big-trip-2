@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { destinations, offersByType } from '../mock/route-point.js';
+import { destinations, offersByType } from '../mock/point.js';
 import {getDateTime} from '../utils.js';
 
 const renderDestinationPictures = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
