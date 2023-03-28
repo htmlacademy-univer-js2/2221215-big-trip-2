@@ -1,6 +1,5 @@
 import EventsView from '../view/trip-events.js';
 import RoutePointView from '../view/route-point.js';
-import FormCreateView from '../view/form-create.js';
 import FormEditView from '../view/form-edit.js';
 import SortView from '../view/sort.js';
 import { render } from '../render.js';
