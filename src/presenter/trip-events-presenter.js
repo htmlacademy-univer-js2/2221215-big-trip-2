@@ -1,4 +1,4 @@
-import TripEventsView from './view/trip-events.js';
+import TripEventsView from '../view/trip-events.js';
 import RoutePointView from '../view/route-point.js';
 import FormEditView from '../view/form-edit.js';
 import { render } from '../render.js';
