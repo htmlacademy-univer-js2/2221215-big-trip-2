@@ -15,7 +15,6 @@ export default class TripEventsPresenter {
     const eventComponent = new RoutePointView(event);
     const eventEditComponent = new FormEditView(event);
 
-
     const editToEvent = () => replace(eventEditComponent, eventComponent);
     const eventToEdit = () => replace(eventComponent, eventEditComponent);
 
