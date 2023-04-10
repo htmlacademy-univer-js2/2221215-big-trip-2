@@ -1,19 +1,16 @@
 import { createElement } from '../render.js';
 
-const createMenuTemplate = () => (
-  `<nav class="trip-controls__trip-tabs  trip-tabs">
-  <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-  <a class="trip-tabs__btn" href="#">Stats</a>
-</nav>`
+const createEmptyListTemplate = () => (
+  '<p class="trip-events__msg">Click New Event to create your first point</p>'
 );
 
-export default class MenuView {
+export default class EmptyEventsView {
   constructor() {
     this._element = null;
   }
 
   get template() {
-    return createMenuTemplate();
+    return createEmptyListTemplate();
   }
 
   get element() {
