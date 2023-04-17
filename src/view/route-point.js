@@ -91,5 +91,4 @@ export default class RoutePointView extends AbstractView {
     event.preventDefault();
     this._callback.favoriteClick();
   }
-
 }
