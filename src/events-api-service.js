@@ -32,10 +32,7 @@ export default class EventsApiService extends ApiService {
       body: JSON.stringify(this.#adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
-
-    const parsed = await ApiService.parseResponse(response);
-
-    return parsed;
+    return ApiService.parseResponse(response);
   };
 
   addEvent = async (event) => {
@@ -45,7 +42,7 @@ export default class EventsApiService extends ApiService {
       body: JSON.stringify(this.#adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
-    return await ApiService.parseResponse(response);
+    return ApiService.parseResponse(response);
   };
 
   deleteEvent = async (event) => {

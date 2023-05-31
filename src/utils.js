@@ -56,8 +56,8 @@ const sortByDate = (a, b) => dayjs(a.startDate) - dayjs(b.startDate);
 const isSubmitDisabledByPrice = (price) => Number(price) > 0 && Number.isInteger(Number(price));
 
 const isSubmitDisabledByDestinationName = (name, destinations) => {
-  const destinationsName = Array.from(destinations, (dest) => dest.name);
-  return destinationsName.includes(name);
+  const destinationsNames = Array.from(destinations, (dest) => dest.name);
+  return destinationsNames.includes(name);
 };
 
 const SORT_TYPES = {

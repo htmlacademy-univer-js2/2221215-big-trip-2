@@ -46,7 +46,7 @@ export default class EventsModel extends Observable {
       throw new Error('Can\'t update unexisting point');
     }
     try {
-      const response = await this.#eventsApiService.updateEvent(update);
+      const response = this.#eventsApiService.updateEvent(update);
       const updated = this.#adaptToClient(response);
 
       this._notify(updateType, update);
@@ -64,6 +64,7 @@ export default class EventsModel extends Observable {
   addEvent = (updateType, update) => {
     try {
       const response = this.#eventsApiService.addEvent(update);
+      console.log(response);
       const newEvent = this.#adaptToClient(response);
       this.#events = [
         newEvent,
@@ -71,6 +72,7 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType, update);
     } catch (err) {
+      console.log(err);
       throw new Error('Can\'t add event');
     }
   };
@@ -101,6 +103,7 @@ export default class EventsModel extends Observable {
   };
 
   #adaptToClient = (event) => {
+    console.log("base_price", Object.keys(event));
     const adapted = {
       ...event,
       basePrice: event['base_price'],
@@ -114,6 +117,7 @@ export default class EventsModel extends Observable {
     delete adapted['date_to'];
     delete adapted['is_favorite'];
 
+    console.log("adapted", adapted, event);
     return adapted;
   };
 }
