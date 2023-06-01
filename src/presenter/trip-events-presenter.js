@@ -88,12 +88,10 @@ export default class TripEventsPresenter {
         }
         break;
       case USER_ACTIONS.ADD:
-        console.log("USER_ACTIONS.ADD");
         this.#newEventPresenter.setSaving();
         try {
           this.#eventsModel.addEvent(updateType, update);
         } catch (err) {
-          console.log("err", err);
           this.#newEventPresenter.setAborting();
         }
         break;

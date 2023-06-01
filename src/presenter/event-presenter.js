@@ -43,7 +43,7 @@ export default class EventPresenter {
       render(this.#component, this.#eventsList);
       return;
     }
-    console.log(this.#type);
+
     if (this.#type === TYPE.DEFAULT) {
       replace(this.#component, previousEvent);
     }
@@ -58,7 +58,6 @@ export default class EventPresenter {
   };
 
   setSaving = () => {
-    console.log("this.#type)", this.#type);
     if (this.#type === TYPE.EDIT) {
       this.#editComponent.updateElement({ isDisabled: true, isSaving: true, });
     }

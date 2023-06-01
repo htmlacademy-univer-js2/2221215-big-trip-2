@@ -54,7 +54,6 @@ export default class EventsApiService extends ApiService {
   };
 
   #adaptToServer = (event) => {
-
     const adapted = {
       ...event,
       'base_price': event.basePrice,

@@ -46,7 +46,7 @@ export default class EventsModel extends Observable {
       throw new Error('Can\'t update unexisting point');
     }
     try {
-      const response = this.#eventsApiService.updateEvent(update);
+      const response = await this.#eventsApiService.updateEvent(update);
       const updated = this.#adaptToClient(response);
 
       this._notify(updateType, update);
@@ -61,10 +61,9 @@ export default class EventsModel extends Observable {
     }
   };
 
-  addEvent = (updateType, update) => {
+  addEvent = async (updateType, update) => {
     try {
-      const response = this.#eventsApiService.addEvent(update);
-      console.log(response);
+      const response = await this.#eventsApiService.addEvent(update);
       const newEvent = this.#adaptToClient(response);
       this.#events = [
         newEvent,
@@ -72,22 +71,15 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType, update);
     } catch (err) {
-      console.log(err);
       throw new Error('Can\'t add event');
     }
   };
 
   deleteEvent = async (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
-
     if (index === -1) {
       throw new Error('Can\'t delete unexisting point');
     }
-
-    this.#events = [
-      ...this.#events.slice(0, index),
-      ...this.#events.slice(index + 1),
-    ];
 
     this._notify(updateType);
     try {
@@ -103,7 +95,6 @@ export default class EventsModel extends Observable {
   };
 
   #adaptToClient = (event) => {
-    console.log("base_price", Object.keys(event));
     const adapted = {
       ...event,
       basePrice: event['base_price'],
@@ -111,13 +102,10 @@ export default class EventsModel extends Observable {
       dateTo: dayjs(event['date_to']),
       isFavorite: event['is_favorite'],
     };
-
     delete adapted['base_price'];
     delete adapted['date_from'];
     delete adapted['date_to'];
     delete adapted['is_favorite'];
-
-    console.log("adapted", adapted, event);
     return adapted;
   };
 }
