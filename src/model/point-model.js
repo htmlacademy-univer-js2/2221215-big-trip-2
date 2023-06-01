@@ -61,9 +61,9 @@ export default class EventsModel extends Observable {
     }
   };
 
-  addEvent = (updateType, update) => {
+  addEvent = async (updateType, update) => {
     try {
-      const response = this.#eventsApiService.addEvent(update);
+      const response = await this.#eventsApiService.addEvent(update);
       const newEvent = this.#adaptToClient(response);
       this.#events = [
         newEvent,
@@ -77,7 +77,6 @@ export default class EventsModel extends Observable {
 
   deleteEvent = async (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
-
     if (index === -1) {
       throw new Error('Can\'t delete unexisting point');
     }
@@ -103,12 +102,10 @@ export default class EventsModel extends Observable {
       dateTo: dayjs(event['date_to']),
       isFavorite: event['is_favorite'],
     };
-
     delete adapted['base_price'];
     delete adapted['date_from'];
     delete adapted['date_to'];
     delete adapted['is_favorite'];
-
     return adapted;
   };
 }

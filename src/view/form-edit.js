@@ -8,7 +8,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const createDestionationsOptionsTemplate = (destins) =>
   destins.reduce((result, destin) =>
-    result.concat(`<option value="${destin}"></option>\n`), '');
+    result.concat(`<option value="${destin.name}"></option>\n`), '');
 
 const renderDestinationPictures = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 
@@ -98,7 +98,7 @@ const createEditingFormTemplate = ({ id, selectedDestination, type, basePrice, d
               ${renderOffers(offers, allOffersForType)}
             </div>
           </section>
-          <section class="event__section  event__section--destination ${selectedDestination.description !== '' ? 'visually-hidden' : ''}">
+          <section class="event__section  event__section--destination ${'description' in selectedDestination ? '' : 'visually-hidden'}">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${selectedDestination.description}</p>
             <div class="event__photos-container">
@@ -143,6 +143,16 @@ export default class EditingFormView extends AbstractStatefulView {
     this.setDeleteHandler(this._callback.delete);
   };
 
+  setDeleteHandler = (callback) => {
+    this._callback.delete = callback;
+    this.element.querySelector('form').addEventListener('reset', this.#deleteHandler);
+  };
+
+  #deleteHandler = (event) => {
+    event.preventDefault();
+    this._callback.delete(EditingFormView.parseState(this._state, this.#allDestinations));
+  };
+
   #setStartDatepicker = () => {
     this.#startDatepicker = flatpickr(
       this.element.querySelector('[name = "event-start-time"]'),
@@ -155,19 +165,9 @@ export default class EditingFormView extends AbstractStatefulView {
     );
   };
 
-  setDeleteHandler = (callback) => {
-    this._callback.delete = callback;
-    this.element.querySelector('form').addEventListener('reset', this.#deleteHandler);
-  };
-
-  #deleteHandler = (event) => {
-    event.preventDefault();
-    this._callback.delete(EditingFormView.parseState(this._state, this.#allDestinations));
-  };
-
   #startDateChangeHandler = ([userStartDate]) => {
     this.updateElement({
-      startDate: dayjs(userStartDate),
+      dateFrom: dayjs(userStartDate),
     });
   };
 
@@ -191,7 +191,7 @@ export default class EditingFormView extends AbstractStatefulView {
 
   #endDateChangeHandler = ([userEndDate]) => {
     this.updateElement({
-      endDate: dayjs(userEndDate),
+      dateTo: dayjs(userEndDate),
     });
   };
 
@@ -217,7 +217,7 @@ export default class EditingFormView extends AbstractStatefulView {
   #destinationToggleHandler = (e) => {
     e.preventDefault();
     this.updateElement({
-      selectedDestination: e.target.value,
+      selectedDestination: { 'name': e.target.value },
     });
   };
 

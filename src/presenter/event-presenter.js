@@ -58,13 +58,13 @@ export default class EventPresenter {
   };
 
   setSaving = () => {
-    if (this.#type === TYPE.EDITING) {
+    if (this.#type === TYPE.EDIT) {
       this.#editComponent.updateElement({ isDisabled: true, isSaving: true, });
     }
   };
 
   setDeleting = () => {
-    if (this.#type === TYPE.EDITING) {
+    if (this.#type === TYPE.EDIT) {
       this.#editComponent.updateElement({ isDisabled: true, isDeleting: true, });
     }
   };
@@ -102,7 +102,7 @@ export default class EventPresenter {
     replace(this.#editComponent, this.#component);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#switchType();
-    this.#type = TYPE.EDITING;
+    this.#type = TYPE.EDIT;
   };
 
   #editToEvent = () => {
