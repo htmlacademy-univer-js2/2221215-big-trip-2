@@ -35,6 +35,8 @@ export default class EventsModel extends Observable {
       this.#events = [];
       this.#offers = [];
       this.#destinations = [];
+      this._notify(UPDATE_TYPES.ERROR);
+      return;
     }
     this._notify(UPDATE_TYPES.INIT);
   };

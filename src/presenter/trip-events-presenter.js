@@ -7,6 +7,8 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import { SORT_TYPES, UPDATE_TYPES, USER_ACTIONS, FILTER_TYPES, sortByPrice, sortByDuration, sortByDate, filter, TIME_LIMIT } from '../utils.js';
 import NewEventPresenter from './new-event-presenter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import ErrorView from '../view/error-view.js';
+import { newEventButtonComponent } from '../main.js';
 
 export default class TripEventsPresenter {
   #rootContainer;
@@ -14,7 +16,9 @@ export default class TripEventsPresenter {
   #filterModel;
   #sortComponent = null;
   #loadingComponent = new LoadingView();
+  #errorComponent = new ErrorView();
   #isLoading = true;
+  #isError = false;
   #eventsList = new TripEventsView();
   #emptyList = null;
   #eventPresenter = new Map();
@@ -127,6 +131,12 @@ export default class TripEventsPresenter {
         remove(this.#loadingComponent);
         this.#render();
         break;
+      case UPDATE_TYPES.ERROR:
+        this.#isLoading = false;
+        this.#isError = true;
+        remove(this.#loadingComponent);
+        this.#render();
+        break;
       default:
         throw new Error(`Update Type ${updateType} is undefined.`);
     }
@@ -168,6 +178,12 @@ export default class TripEventsPresenter {
       return;
     }
 
+    if (this.#isError) {
+      this.#renderError();
+      newEventButtonComponent.element.disabled = true;
+      return;
+    }
+
     if (!events.length) {
       this.#renderEmptyList();
       return;
@@ -178,6 +194,10 @@ export default class TripEventsPresenter {
 
   #renderLoading = () => {
     render(this.#loadingComponent, this.#rootContainer);
+  };
+
+  #renderError = () => {
+    render(this.#errorComponent, this.#rootContainer);
   };
 
   #clear = ({ resetSortType = false } = {}) => {
