@@ -132,6 +132,34 @@ export default class EditingFormView extends AbstractStatefulView {
     return createEditingFormTemplate(this._state, this.#allOffers, this.#allDestinations);
   }
 
+  setDeleteHandler = (callback) => {
+    this._callback.delete = callback;
+    this.element.querySelector('form').addEventListener('reset', this.#deleteHandler);
+  };
+
+  setRollDownHandler = (callback) => {
+    this._callback.rollDown = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollDownHandler);
+  };
+
+  setSaveHandler = (callback) => {
+    this._callback.save = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#saveHandler);
+  };
+
+  removeElement = () => {
+    super.removeElement();
+    if (this.#startDatepicker) {
+      this.#startDatepicker.destroy();
+      this.#startDatepicker = null;
+    }
+
+    if (this.#stopDatepicker) {
+      this.#stopDatepicker.destroy();
+      this.#stopDatepicker = null;
+    }
+  };
+
   reset = (event, allOffers, allDestinations) =>  this.updateElement(EditingFormView.parseEvent(event, allOffers, allDestinations));
 
   _restoreHandlers = () => {
@@ -141,16 +169,6 @@ export default class EditingFormView extends AbstractStatefulView {
     this.#setStartDatepicker();
     this.#setStopDatepicker();
     this.setDeleteHandler(this._callback.delete);
-  };
-
-  setDeleteHandler = (callback) => {
-    this._callback.delete = callback;
-    this.element.querySelector('form').addEventListener('reset', this.#deleteHandler);
-  };
-
-  #deleteHandler = (event) => {
-    event.preventDefault();
-    this._callback.delete(EditingFormView.parseState(this._state, this.#allDestinations));
   };
 
   #setStartDatepicker = () => {
@@ -165,10 +183,11 @@ export default class EditingFormView extends AbstractStatefulView {
     );
   };
 
-  #startDateChangeHandler = ([userStartDate]) => {
-    this.updateElement({
-      dateFrom: dayjs(userStartDate),
-    });
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
+    this.element.querySelector('.event__type-group').addEventListener('click', this.#typeToggleHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerToggleHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceToggleHandler);
   };
 
   #setStopDatepicker = () => {
@@ -189,22 +208,21 @@ export default class EditingFormView extends AbstractStatefulView {
     );
   };
 
+  #deleteHandler = (event) => {
+    event.preventDefault();
+    this._callback.delete(EditingFormView.parseState(this._state, this.#allDestinations));
+  };
+
+  #startDateChangeHandler = ([userStartDate]) => {
+    this.updateElement({
+      dateFrom: dayjs(userStartDate),
+    });
+  };
+
   #endDateChangeHandler = ([userEndDate]) => {
     this.updateElement({
       dateTo: dayjs(userEndDate),
     });
-  };
-
-  setRollDownHandler = (callback) => {
-    this._callback.rollDown = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollDownHandler);
-  };
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
-    this.element.querySelector('.event__type-group').addEventListener('click', this.#typeToggleHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerToggleHandler);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceToggleHandler);
   };
 
   #priceToggleHandler = (e) => {
@@ -252,27 +270,9 @@ export default class EditingFormView extends AbstractStatefulView {
     this._callback.rollDown();
   };
 
-  setSaveHandler = (callback) => {
-    this._callback.save = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#saveHandler);
-  };
-
   #saveHandler = (e) => {
     e.preventDefault();
     this._callback.save(EditingFormView.parseState(this._state, this.#allDestinations));
-  };
-
-  removeElement = () => {
-    super.removeElement();
-    if (this.#startDatepicker) {
-      this.#startDatepicker.destroy();
-      this.#startDatepicker = null;
-    }
-
-    if (this.#stopDatepicker) {
-      this.#stopDatepicker.destroy();
-      this.#stopDatepicker = null;
-    }
   };
 
   static parseEvent = (event, allOffers, allDestinations) => ({

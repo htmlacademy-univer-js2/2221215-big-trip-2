@@ -23,7 +23,7 @@ const eventsModel = new PointsModel(new EventsApiService(END_POINT, AUTHORIZATIO
 const tripInfoPresenter = new TripInfoPresenter(tripMainElement, eventsModel);
 const routePresenter = new TripEventsPresenter(contentElement, eventsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, eventsModel);
-const newEventButtonComponent = new NewEventButtonView();
+export const newEventButtonComponent = new NewEventButtonView();
 
 
 const closeNewEventFormHandler = () => {

@@ -1,25 +1,27 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
-const HOUR_MINUTES_COUNT = 60;
-const TOTAL_DAY_MINUTES_COUNT = 1440;
+dayjs.extend(duration);
+
+const HOURS = 24;
+const MINUTES = 60;
 const DATE_FORMAT = 'YYYY-MM-DD';
 const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 const TIME_FORMAT = 'hh:mm';
 
 const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
 
-const duration = (dateFrom, dateTo) => {
-  const difference = dayjs(dateTo).diff(dayjs(dateFrom), 'minute', true);
+const durationDates = (dateFrom, dateTo) => {
+  const diffInTotalMinutes = Math.ceil(dayjs(dateTo).diff(dayjs(dateFrom), 'minute', true));
+  const diffInHours = Math.floor(diffInTotalMinutes / MINUTES) % HOURS;
+  const diffInDays = Math.floor(diffInTotalMinutes / (MINUTES * HOURS));
 
-  const days = Math.floor(difference / TOTAL_DAY_MINUTES_COUNT);
-  const restHours = Math.floor((difference % TOTAL_DAY_MINUTES_COUNT) / HOUR_MINUTES_COUNT);
-  const restMinutes = difference % HOUR_MINUTES_COUNT;
-
-  const daysOutput = days ? `${days}D` : '';
-  const hoursOutput = restHours ? `${restHours}H` : '';
-  const minutesOutput = restMinutes ? `${restMinutes}M` : '';
-
-  return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
+  if ((diffInDays === 0) && (diffInHours === 0)) {
+    return dayjs.duration(diffInTotalMinutes, 'minutes').format('mm[M]');
+  } else if (diffInDays === 0) {
+    return dayjs.duration(diffInTotalMinutes, 'minutes').format('HH[H] mm[M]');
+  }
+  return dayjs.duration(diffInTotalMinutes, 'minutes').format('DD[D] HH[H] mm[M]');
 };
 
 const getDate = (date) => dayjs(date).format(DATE_FORMAT);
@@ -76,6 +78,8 @@ const UPDATE_TYPES = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+  ERROR: 'ERROR'
 };
 
 const NEW_POINT = {
@@ -112,7 +116,7 @@ export {
   getRandomInteger,
   getRandomElement,
   humanizePointDueDate,
-  duration,
+  durationDates,
   getDate,
   getDateTime,
   getTime,
